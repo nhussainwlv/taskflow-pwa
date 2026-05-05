@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TaskFlow — case study Progressive Web Application for evaluating PWAs versus native apps (accessibility, installability, offline use). Demo task management app.">
+    <meta name="theme-color" content="#4F46E5">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="TaskFlow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="apple-touch-icon" href="../assets/icon-192.png">
+    
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/app.css">
+    <link rel="stylesheet" href="../css/a11y-ux.css">
+    
+    <title>TaskFlow — PWA case study (task management)</title>
+</head>
+<body>
+    <!-- =========================================================================
+         SVG ICON SPRITE
+         ========================================================================= -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+        <defs>
+            <!-- Logo -->
+            <symbol id="icon-logo" viewBox="0 0 32 32">
+                <path d="M8 4a4 4 0 0 0-4 4v16a4 4 0 0 0 4 4h16a4 4 0 0 0 4-4V8a4 4 0 0 0-4-4H8zm2 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-2zm0 8a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-2z" fill="currentColor"/>
+            </symbol>
+            
+            <!-- Navigation -->
+            <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>
+            </symbol>
+            <symbol id="icon-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12,2 2,7 12,12 22,7 12,2"/><polyline points="2,17 12,22 22,17"/><polyline points="2,12 12,17 22,12"/>
+            </symbol>
+            <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+            </symbol>
+            <symbol id="icon-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/>
+            </symbol>
+            <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </symbol>
+            
+            <!-- Actions -->
+            <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </symbol>
+            <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </symbol>
+            <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20,6 9,17 4,12"/>
+            </symbol>
+            <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </symbol>
+            <symbol id="icon-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+            </symbol>
+            <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </symbol>
+            <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </symbol>
+            <symbol id="icon-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3"/>
+            </symbol>
+            <symbol id="icon-sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="6" x2="14" y2="6"/><line x1="4" y1="12" x2="11" y2="12"/><line x1="4" y1="18" x2="8" y2="18"/><polyline points="15,15 18,18 21,15"/><line x1="18" y1="8" x2="18" y2="18"/>
+            </symbol>
+            <symbol id="icon-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </symbol>
+            <symbol id="icon-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/>
+            </symbol>
+            <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </symbol>
+            <symbol id="icon-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </symbol>
+            
+            <!-- Status -->
+            <symbol id="icon-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
+            </symbol>
+            <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </symbol>
+            <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </symbol>
+            <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </symbol>
+            <symbol id="icon-user-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+            </symbol>
+            <symbol id="icon-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </symbol>
+            <symbol id="icon-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+            </symbol>
+            <symbol id="icon-attachment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+            </symbol>
+            
+            <!-- Theme -->
+            <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </symbol>
+            <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </symbol>
+            
+            <!-- Features -->
+            <symbol id="icon-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2"/>
+            </symbol>
+            <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </symbol>
+            <symbol id="icon-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+            </symbol>
+            <symbol id="icon-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+            </symbol>
+            
+            <!-- Alerts -->
+            <symbol id="icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+            </symbol>
+            <symbol id="icon-alert-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </symbol>
+            <symbol id="icon-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </symbol>
+            
+            <!-- Misc -->
+            <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6,9 12,15 18,9"/>
+            </symbol>
+            <symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9,18 15,12 9,6"/>
+            </symbol>
+            <symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5,12 12,5 19,12"/>
+            </symbol>
+            <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/>
+            </symbol>
+            <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+            </symbol>
+            <symbol id="icon-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </symbol>
+            
+            <!-- Auth & Navigation -->
+            <symbol id="icon-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </symbol>
+            <symbol id="icon-log-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/>
+            </symbol>
+            <symbol id="icon-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15,18 9,12 15,6"/>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- =========================================================================
+         SKIP LINK
+         ========================================================================= -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <div id="connectivity-banner" class="connectivity-banner" role="status" aria-live="polite" hidden>
+        <span><strong>Offline.</strong> You can keep working — this PWA uses local storage and cached assets.</span>
+        <button type="button" class="btn btn--ghost btn--sm" data-dismiss-connectivity aria-label="Dismiss offline notice">Dismiss</button>
+    </div>
+
+    <!-- =========================================================================
+         HEADER
+         ========================================================================= -->
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header__content">
+                <!-- Logo -->
+                <a href="#" class="header__logo" aria-label="TaskFlow Home">
+                    <svg class="icon icon--lg" aria-hidden="true">
+                        <use href="#icon-logo"></use>
+                    </svg>
+                    <span class="header__logo-text">TaskFlow</span>
+                </a>
+
+                <!-- Search (hidden when signed out) -->
+                <div class="header__search" data-requires-auth>
+                    <div class="search-input">
+                        <svg class="search-input__icon" aria-hidden="true">
+                            <use href="#icon-search"></use>
+                        </svg>
+                        <input 
+                            type="text" 
+                            class="input" 
+                            placeholder="Search tasks..."
+                            data-search
+                            aria-label="Search tasks"
+                        >
+                        <kbd class="search-input__kbd">/</kbd>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="header__actions">
+                    <!-- Signed out actions -->
+                    <div class="header__auth-actions" data-show-signed-out>
+                        <button class="btn btn--ghost btn--sm" data-start-demo>
+                            <svg class="icon icon--sm" aria-hidden="true">
+                                <use href="#icon-zap"></use>
+                            </svg>
+                            Demo
+                        </button>
+                        <button class="btn btn--secondary btn--sm" data-open-signin>
+                            Sign In
+                        </button>
+                        <button class="btn btn--primary btn--sm" data-open-signup>
+                            Get Started
+                        </button>
+                    </div>
+
+                    <!-- Signed in actions -->
+                    <div class="header__user-actions" data-show-signed-in hidden>
+                        <button 
+                            class="btn btn--primary btn--sm" 
+                            data-quick-add
+                            aria-label="Add new task"
+                        >
+                            <svg class="icon icon--sm" aria-hidden="true">
+                                <use href="#icon-plus"></use>
+                            </svg>
+                            <span class="hide-mobile">Add Task</span>
+                        </button>
+
+                        <button 
+                            class="btn btn--ghost btn--icon" 
+                            data-theme-toggle
+                            aria-label="Toggle theme"
+                        >
+                            <svg class="icon theme-icon--light" aria-hidden="true">
+                                <use href="#icon-moon"></use>
+                            </svg>
+                            <svg class="icon theme-icon--dark" aria-hidden="true">
+                                <use href="#icon-sun"></use>
+                            </svg>
+                        </button>
+
+                        <button 
+                            class="btn btn--ghost btn--icon" 
+                            data-notifications
+                            aria-label="Notifications"
+                        >
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-bell"></use>
+                            </svg>
+                        </button>
+
+                        <button class="btn btn--ghost btn--icon" data-invite-member aria-label="Invite member">
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-user-plus"></use>
+                            </svg>
+                        </button>
+
+                        <!-- Profile -->
+                        <div class="dropdown" data-profile-dropdown>
+                            <button class="avatar" data-dropdown-trigger aria-label="Profile menu" aria-haspopup="true">
+                                <span data-user-initials>U</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Theme toggle (always visible) -->
+                    <button 
+                        class="btn btn--ghost btn--icon" 
+                        data-theme-toggle-global
+                        aria-label="Toggle theme"
+                        data-show-signed-out
+                    >
+                        <svg class="icon theme-icon--light" aria-hidden="true">
+                            <use href="#icon-moon"></use>
+                        </svg>
+                        <svg class="icon theme-icon--dark" aria-hidden="true">
+                            <use href="#icon-sun"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================================================================
+         MAIN CONTENT
+         ========================================================================= -->
+    <main id="main" class="main" role="main">
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="container">
+                <div class="hero__content">
+                    <h1 id="hero-title" class="hero__title">
+                        Organise your work,<br>
+                        <span class="text-gradient">achieve more</span>
+                    </h1>
+                    <p class="hero__subtitle">
+                        A modern task management app that helps you stay focused and productive.
+                        Drag, drop, and conquer your to-do list.
+                    </p>
+                    <div class="hero__actions" data-show-signed-out>
+                        <button class="btn btn--primary btn--lg" data-open-signup>
+                            <svg class="icon icon--sm" aria-hidden="true">
+                                <use href="#icon-zap"></use>
+                            </svg>
+                            Get Started Free
+                        </button>
+                        <button class="btn btn--secondary btn--lg" data-start-demo>
+                            <svg class="icon icon--sm" aria-hidden="true">
+                                <use href="#icon-eye"></use>
+                            </svg>
+                            Try Demo
+                        </button>
+                    </div>
+                    <div class="hero__actions" data-show-signed-in hidden>
+                        <button class="btn btn--primary btn--lg" data-quick-add>
+                            <svg class="icon icon--sm" aria-hidden="true">
+                                <use href="#icon-plus"></use>
+                            </svg>
+                            Create Your First Task
+                        </button>
+                        <button class="btn btn--secondary btn--lg" data-command-palette>
+                            <svg class="icon icon--sm" aria-hidden="true">
+                                <use href="#icon-search"></use>
+                            </svg>
+                            Quick Search
+                            <kbd>⌘K</kbd>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="hero__stats" id="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--primary">
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-layers"></use>
+                            </svg>
+                        </div>
+                        <div class="stat-card__content">
+                            <span class="stat-card__value" data-stat="total">0</span>
+                            <span class="stat-card__label">Total Tasks</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--info">
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-clock"></use>
+                            </svg>
+                        </div>
+                        <div class="stat-card__content">
+                            <span class="stat-card__value" data-stat="in-progress">0</span>
+                            <span class="stat-card__label">In Progress</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--success">
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-check-circle"></use>
+                            </svg>
+                        </div>
+                        <div class="stat-card__content">
+                            <span class="stat-card__value" data-stat="done">0</span>
+                            <span class="stat-card__label">Completed</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--warning">
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-alert-circle"></use>
+                            </svg>
+                        </div>
+                        <div class="stat-card__content">
+                            <span class="stat-card__value" data-stat="overdue">0</span>
+                            <span class="stat-card__label">Overdue</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Board Section -->
+        <section class="board-section" aria-label="Task Board" data-requires-auth>
+            <div class="container">
+                <!-- Board Header -->
+                <div class="board-header">
+                    <div class="board-header__left">
+                        <h2 class="board-header__title">My Tasks</h2>
+                        <span class="badge badge--default" data-task-count>0 tasks</span>
+                    </div>
+                    <div class="board-header__right board-header__views flex flex-wrap gap-2 items-center">
+                        <div class="board-view-toggle" role="toolbar" aria-label="Task layout">
+                            <button type="button" class="btn btn--secondary btn--sm board-view-toggle__btn" data-view-mode="kanban" aria-pressed="true">Board</button>
+                            <button type="button" class="btn btn--ghost btn--sm board-view-toggle__btn" data-view-mode="list" aria-pressed="false">List</button>
+                            <button type="button" class="btn btn--ghost btn--sm board-view-toggle__btn" data-view-mode="calendar" aria-pressed="false">Calendar</button>
+                        </div>
+                        <button class="btn btn--ghost btn--sm" data-open-filters>
+                            <svg class="icon icon--sm" aria-hidden="true">
+                                <use href="#icon-filter"></use>
+                            </svg>
+                            Filters
+                        </button>
+                        <button class="btn btn--ghost btn--sm" data-open-saved-views>
+                            <svg class="icon icon--sm" aria-hidden="true">
+                                <use href="#icon-eye"></use>
+                            </svg>
+                            Views
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Panel (hidden by default) -->
+                <div id="filter-panel" class="filter-panel-wrapper" hidden></div>
+
+                <!-- Kanban Board -->
+                <div id="board" class="board-container" role="region" aria-label="Kanban Board">
+                    <!-- Board content rendered by JS -->
+                    <div class="board-loading">
+                        <div class="spinner spinner--lg"></div>
+                        <p class="text-tertiary mt-4">Loading your tasks...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sign In Required Section (shown when signed out) -->
+        <section class="signin-required-section" data-show-signed-out aria-labelledby="signin-cta-title">
+            <div class="container">
+                <div class="signin-cta">
+                    <svg class="icon icon--xl text-primary-500" aria-hidden="true">
+                        <use href="#icon-layers"></use>
+                    </svg>
+                    <h2 id="signin-cta-title" class="signin-cta__title">Sign in to manage your tasks</h2>
+                    <p class="signin-cta__text">Create an account or sign in to start organising your work with TaskFlow.</p>
+                    <div class="signin-cta__actions">
+                        <button class="btn btn--primary btn--lg" data-open-signup>Create Free Account</button>
+                        <button class="btn btn--secondary btn--lg" data-open-signin>Sign In</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Today's Agenda Section -->
+        <section class="agenda-section" aria-labelledby="agenda-title" data-requires-auth>
+            <div class="container">
+                <div class="agenda">
+                    <div class="agenda__header">
+                        <h2 id="agenda-title" class="agenda__title">
+                            <svg class="icon" aria-hidden="true">
+                                <use href="#icon-calendar"></use>
+                            </svg>
+                            Today's Agenda
+                        </h2>
+                        <span class="text-sm text-tertiary" id="today-date"></span>
+                    </div>
+                    <div id="agenda-list" class="agenda__list">
+                        <!-- Agenda items rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" aria-labelledby="features-title">
+            <div class="container">
+                <div class="features-header">
+                    <h2 id="features-title" class="features-header__title">
+                        Everything you need to stay organised
+                    </h2>
+                    <p class="features-header__subtitle">
+                        Powerful features designed to boost your productivity
+                    </p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-card__icon">
+                            <svg class="icon icon--lg" aria-hidden="true">
+                                <use href="#icon-layers"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card__title">Kanban Boards</h3>
+                        <p class="feature-card__description">
+                            Visualise your workflow with drag-and-drop columns. Move tasks from Backlog to Done with ease.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card__icon">
+                            <svg class="icon icon--lg" aria-hidden="true">
+                                <use href="#icon-filter"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card__title">Smart Filters</h3>
+                        <p class="feature-card__description">
+                            Filter by status, priority, assignee, or due date. Save custom views for quick access.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card__icon">
+                            <svg class="icon icon--lg" aria-hidden="true">
+                                <use href="#icon-users"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card__title">Team Collaboration</h3>
+                        <p class="feature-card__description">
+                            Invite team members, assign tasks, and share updates via email. Role-based permissions included.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card__icon">
+                            <svg class="icon icon--lg" aria-hidden="true">
+                                <use href="#icon-sparkles"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card__title">AI Assistant</h3>
+                        <p class="feature-card__description">
+                            Create tasks with natural language, get priority suggestions, and summarise your day instantly.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card__icon">
+                            <svg class="icon icon--lg" aria-hidden="true">
+                                <use href="#icon-shield"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card__title">Offline First</h3>
+                        <p class="feature-card__description">
+                            Works without internet. Your data is stored locally and syncs when you're back online.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-card__icon">
+                            <svg class="icon icon--lg" aria-hidden="true">
+                                <use href="#icon-zap"></use>
+                            </svg>
+                        </div>
+                        <h3 class="feature-card__title">Keyboard First</h3>
+                        <p class="feature-card__description">
+                            Navigate with shortcuts. Press <kbd>/</kbd> to search, <kbd>N</kbd> for new task, <kbd>1-3</kbd> for priority.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =========================================================================
+         FOOTER
+         ========================================================================= -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__brand">
+                    <a href="#" class="footer__logo">
+                        <svg class="icon icon--lg" aria-hidden="true">
+                            <use href="#icon-logo"></use>
+                        </svg>
+                        <span>TaskFlow</span>
+                    </a>
+                    <p class="footer__tagline">
+                        Built with vanilla HTML, CSS, and JavaScript.<br>
+                        No frameworks, no dependencies.
+                    </p>
+                </div>
+                <div class="footer__links">
+                    <div class="footer__section">
+                        <h4 class="footer__title">Keyboard Shortcuts</h4>
+                        <ul class="footer__list">
+                            <li><kbd>/</kbd> Focus search</li>
+                            <li><kbd>N</kbd> New task</li>
+                            <li><kbd>T</kbd> Toggle theme</li>
+                            <li><kbd>1-3</kbd> Set priority</li>
+                        </ul>
+                    </div>
+                    <div class="footer__section">
+                        <h4 class="footer__title">Accessibility &amp; UX</h4>
+                        <ul class="footer__list">
+                            <li>Skip link, landmarks, focus-managed modals</li>
+                            <li>Keyboard shortcuts &amp; optional larger text</li>
+                            <li>Respects <code>prefers-reduced-motion</code></li>
+                            <li>Installable without an app store (where supported)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <details class="footer__research mt-4">
+                <summary class="footer__research-summary text-sm font-medium cursor-pointer">Research context (dissertation)</summary>
+                <div class="footer__research-body text-sm text-secondary mt-2 max-w-2xl">
+                    <p class="mb-2"><strong>Evaluating Progressive Web Applications as a Viable Alternative to Native Mobile Applications</strong> — TaskFlow is a paired implementation (this PWA and a native Android build) used to compare accessibility affordances, deployment friction, offline behaviour, and inclusive design patterns in the browser versus a platform-specific stack.</p>
+                    <p class="text-xs text-tertiary">Use <strong>Profile → Settings</strong> for install, readability, and contrast options demonstrated in the PWA version.</p>
+                </div>
+            </details>
+            <div class="footer__bottom">
+                <p>&copy; 2026 TaskFlow PWA. University of Wolverhampton — dissertation artefact</p>
+                <p class="footer__credit">
+                    Built by <a href="mailto:n.hussain30@wlv.ac.uk" class="footer__credit-link">Naeem Hussain</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =========================================================================
+         TOAST CONTAINER
+         ========================================================================= -->
+    <div id="toast-container" class="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
+
+    <!-- =========================================================================
+         SCRIPTS
+         ========================================================================= -->
+    <script type="module" src="../js/app.js"></script>
+</body>
+</html>
