@@ -4,6 +4,14 @@ A modern, accessible task management web application built with **vanilla HTML, 
 
 **Built by [Naeem Hussain](mailto:n.hussain30@wlv.ac.uk)**
 
+## Run it online
+
+You can open the deployed PWA in your browser (no install required to try it):
+
+**[https://taskflow-pwa.onrender.com/html/index.html](https://taskflow-pwa.onrender.com/html/index.html)**
+
+The site root may redirect; the app entry is always under `/html/index.html` on this host.
+
 ![TaskFlow Screenshot](./assets/screenshot.png)
 
 ## ✨ Features
@@ -80,8 +88,9 @@ TaskFlowPwa/
 
 ### Quick Start
 
-1. **Clone or download** this repository
-2. **Start a local server** (required for ES modules):
+1. **Try the live app** (easiest): open **[taskflow-pwa.onrender.com/html/index.html](https://taskflow-pwa.onrender.com/html/index.html)** in a modern browser.
+2. **Or run locally:** **Clone or download** this repository
+3. **Start a local server** (required for ES modules):
    ```bash
    # Python
    python3 -m http.server 8080
@@ -92,7 +101,11 @@ TaskFlowPwa/
    # PHP
    php -S localhost:8080
    ```
+<<<<<<< HEAD
 3. **Open** `https://taskflow-pwa.onrender.com/html/index.html` in your browser
+=======
+4. **Open** `http://localhost:8080/html/index.html` in your browser
+>>>>>>> bba0eb6 (Docs: add Render live URL to README)
 
 ### Demo Data
 
