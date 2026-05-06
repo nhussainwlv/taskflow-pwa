@@ -162,6 +162,19 @@ function updateAuthUI() {
  * Sets up global event listeners
  */
 function setupEventListeners() {
+    document.querySelectorAll('.header__logo, .footer__logo').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const path = window.location.pathname || '';
+            if (!path.endsWith('/html/index.html')) {
+                window.location.assign('html/index.html');
+                return;
+            }
+            // If already on home page, ensure users are returned to the top.
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
     // Quick add task button
     document.querySelectorAll('[data-quick-add]').forEach(btn => {
         btn.addEventListener('click', () => openQuickAddModal());
