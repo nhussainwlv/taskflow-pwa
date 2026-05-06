@@ -18,6 +18,7 @@ import { startDemo } from './demo.js';
 import { initA11yUx, announce, registerA11yPanelExtras } from './a11y-ux.js';
 import { attachAccessibilityPanelExtras, initAccessibilityExtras } from './accessibility-extras.js';
 import { initInstallEngagementTracking } from './engagement.js';
+import { initInstallPrompt, maybePromptInstallAfterSignin } from './install-prompt.js';
 
 /**
  * Application initialisation
@@ -26,9 +27,12 @@ async function init() {
     console.log('[TaskFlow] Starting initialisation...');
 
     try {
+        initInstallPrompt();
+
         // Initialise authentication first
         await initAuth();
         initInstallEngagementTracking();
+        await maybePromptInstallAfterSignin();
         console.log('[TaskFlow] Auth initialised');
 
         // Initialise state (loads from storage or seeds demo data)

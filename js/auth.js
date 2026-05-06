@@ -22,6 +22,7 @@ let authListeners = [];
  */
 const USERS_KEY = 'users';
 const SESSION_KEY = 'session';
+const POST_SIGNIN_INSTALL_PROMPT_KEY = 'tf_prompt_install_after_signin';
 
 /**
  * Gets the current authenticated user
@@ -241,6 +242,9 @@ async function createSession(user) {
         userId: user.id,
         createdAt: new Date().toISOString()
     });
+
+    // Let app startup know this session came from an active sign-in/sign-up action.
+    sessionStorage.setItem(POST_SIGNIN_INSTALL_PROMPT_KEY, '1');
 
     notifyAuthChange();
 }
