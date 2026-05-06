@@ -10,9 +10,6 @@ You can open the deployed PWA in your browser (no install required to try it):
 
 **[https://taskflow-pwa.onrender.com/html/index.html](https://taskflow-pwa.onrender.com/html/index.html)**
 
-The site root may redirect; the app entry is always under `/html/index.html` on this host.
-
-![TaskFlow Screenshot](./assets/screenshot.png)
 
 ## ✨ Features
 
