@@ -1,3 +1,10 @@
+/**
+ * Student Name : Naeem Hussain
+ * ID : 2365963
+ * Module Name : Project and Professionalism
+ * Note: Comments in this file are kept brief and readable.
+ */
+
 import { Modal, Toast } from './ui.js';
 
 const POST_SIGNIN_INSTALL_PROMPT_KEY = 'tf_prompt_install_after_signin';

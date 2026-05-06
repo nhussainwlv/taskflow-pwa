@@ -1,4 +1,11 @@
 /**
+ * Student Name : Naeem Hussain
+ * ID : 2365963
+ * Module Name : Project and Professionalism
+ * Note: Comments in this file are kept brief and readable.
+ */
+
+/**
  * ============================================================================
  * UTILS.JS - Utility Functions
  * ============================================================================
