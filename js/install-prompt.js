@@ -2,6 +2,7 @@ import { Modal, Toast } from './ui.js';
 
 const POST_SIGNIN_INSTALL_PROMPT_KEY = 'tf_prompt_install_after_signin';
 const INSTALL_PROMPT_DISMISSED_KEY = 'tf_install_prompt_dismissed';
+const MIN_PROMPT_VISIBLE_MS = 3000;
 
 let deferredInstallPromptEvent = null;
 
@@ -32,22 +33,51 @@ function markDismissedThisSession() {
     sessionStorage.setItem(INSTALL_PROMPT_DISMISSED_KEY, '1');
 }
 
-function openIosInstallHelp() {
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function openManualInstallHelp() {
+    const isIos = isIosSafari();
+    const footer = document.createElement('div');
+    footer.className = 'flex gap-3 justify-end';
+    footer.innerHTML = `
+        <button type="button" class="btn btn--secondary" data-install-dismiss disabled>Not now (3s)</button>
+    `;
+
     const modal = Modal.open({
         title: 'Add TaskFlow to Home Screen',
-        content: `
-            <p class="text-secondary mb-3">
-                Install prompts are not supported automatically on iOS Safari.
-            </p>
-            <ol class="text-sm text-secondary" style="padding-left: 1.25rem; margin: 0;">
-                <li>Tap the <strong>Share</strong> icon in Safari.</li>
-                <li>Choose <strong>Add to Home Screen</strong>.</li>
-                <li>Tap <strong>Add</strong> to install TaskFlow.</li>
-            </ol>
-        `
+        content: isIos
+            ? `
+                <p class="text-secondary mb-3">Use Safari menu to add TaskFlow.</p>
+                <ol class="text-sm text-secondary" style="padding-left: 1.25rem; margin: 0;">
+                    <li>Tap the <strong>Share</strong> icon in Safari.</li>
+                    <li>Choose <strong>Add to Home Screen</strong>.</li>
+                    <li>Tap <strong>Add</strong> to install TaskFlow.</li>
+                </ol>
+              `
+            : `
+                <p class="text-secondary mb-3">Install from your browser menu:</p>
+                <ol class="text-sm text-secondary" style="padding-left: 1.25rem; margin: 0;">
+                    <li>Open your browser menu (<strong>...</strong> or settings icon).</li>
+                    <li>Select <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li>
+                    <li>Confirm to install TaskFlow.</li>
+                </ol>
+              `,
+        footer,
+        closable: false
     });
 
-    modal.querySelector('.modal__close')?.addEventListener('click', markPromptHandled);
+    const dismissBtn = footer.querySelector('[data-install-dismiss]');
+    await delay(MIN_PROMPT_VISIBLE_MS);
+    if (!dismissBtn) return;
+    dismissBtn.disabled = false;
+    dismissBtn.textContent = 'Not now';
+    dismissBtn.addEventListener('click', () => {
+        markDismissedThisSession();
+        markPromptHandled();
+        Modal.close(modal);
+    });
 }
 
 async function openInstallPromptModal() {
@@ -64,8 +94,8 @@ async function openInstallPromptModal() {
         const footer = document.createElement('div');
         footer.className = 'flex gap-3 justify-end';
         footer.innerHTML = `
-            <button type="button" class="btn btn--secondary" data-install-later>Not now</button>
-            <button type="button" class="btn btn--primary" data-install-now>Install app</button>
+            <button type="button" class="btn btn--secondary" data-install-later disabled>Not now (3s)</button>
+            <button type="button" class="btn btn--primary" data-install-now disabled>Install app (3s)</button>
         `;
 
         const modal = Modal.open({
@@ -76,6 +106,7 @@ async function openInstallPromptModal() {
                 </p>
             `,
             footer,
+            closable: false,
             onClose: () => {
                 markDismissedThisSession();
                 markPromptHandled();
@@ -83,14 +114,27 @@ async function openInstallPromptModal() {
             }
         });
 
-        footer.querySelector('[data-install-later]')?.addEventListener('click', () => {
+        const laterBtn = footer.querySelector('[data-install-later]');
+        const installBtn = footer.querySelector('[data-install-now]');
+        setTimeout(() => {
+            if (laterBtn) {
+                laterBtn.disabled = false;
+                laterBtn.textContent = 'Not now';
+            }
+            if (installBtn) {
+                installBtn.disabled = false;
+                installBtn.textContent = 'Install app';
+            }
+        }, MIN_PROMPT_VISIBLE_MS);
+
+        laterBtn?.addEventListener('click', () => {
             markDismissedThisSession();
             markPromptHandled();
             Modal.close(modal);
             finish(false);
         });
 
-        footer.querySelector('[data-install-now]')?.addEventListener('click', async () => {
+        installBtn?.addEventListener('click', async () => {
             const promptEvent = deferredInstallPromptEvent;
             if (!promptEvent) {
                 Modal.close(modal);
@@ -139,8 +183,5 @@ export async function maybePromptInstallAfterSignin() {
         return;
     }
 
-    if (isIosSafari()) {
-        openIosInstallHelp();
-        markPromptHandled();
-    }
+    await openManualInstallHelp();
 }
